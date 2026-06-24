@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Tabs } from '/src/components/Tabs/Tabs';
 import 'bulma/css/bulma.css';
 import '@fortawesome/fontawesome-free/css/all.css';
 import './App.scss';
@@ -11,46 +12,23 @@ export const tabs = [
 
 export const App = () => {
   const [activeTabId, setActiveTabId] = useState('tab-1');
+  const activeTab = tabs.find(tab => tab.id === activeTabId) || tabs[0];
 
   const handleTabSelected = tabId => {
-    setActiveTabId(tabId);
+    if (tabId !== activeTabId) {
+      setActiveTabId(tabId);
+    }
   };
-
-  const activeTab = tabs.find(tab => tab.id === activeTabId);
-
-  if (!activeTab) {
-    return null;
-  }
 
   return (
     <div className="section">
       <h1 className="title">Selected tab is {activeTab.title}</h1>
 
-      <div data-cy="TabsComponent">
-        <div className="tabs is-boxed">
-          <ul>
-            {tabs.map(tab => (
-              <li
-                key={tab.id}
-                className={tab.id === activeTabId ? 'is-active' : ''}
-                data-cy="Tab"
-              >
-                <a
-                  onClick={() => handleTabSelected(tab.id)}
-                  href={`#${tab.id}`}
-                  data-cy="TabLink"
-                >
-                  {tab.title}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        <div className="block" data-cy="TabContent">
-          {activeTab.content}
-        </div>
-      </div>
+      <Tabs
+        tabs={tabs}
+        activeTabId={activeTabId}
+        onTabSelected={handleTabSelected}
+      />
     </div>
   );
 };
